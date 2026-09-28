@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AVL Tree Visualizer</title>
+<style>
+body{font-family:Arial;background:#0f172a;color:white;text-align:center;padding:10px}
+h1{color:#38bdf8}
+input{padding:10px;border-radius:8px;border:none;width:100px}
+button{padding:10px 15px;margin:5px;border:none;border-radius:8px;background:#38bdf8;font-weight:bold}
+canvas{background:#1e293b;border-radius:12px;margin-top:10px;width:95%;max-width:1000px;height:500px}
+</style>
+</head>
+<body>
+<h1>AVL Tree Visualizer</h1>
+<input id="val" type="number" placeholder="Value">
+<button onclick="insertVal()">Insert</button>
+<button onclick="deleteVal()">Delete</button>
+<button onclick="clearTree()">Clear</button>
+<br>
+<canvas id="c" width="1000" height="500"></canvas>
+<div id="info"></div>
+<script>
+class Node{constructor(v){this.v=v;this.l=null;this.r=null;this.h=1}}
+let root=null; const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+function h(n){return n?n.h:0}
+function upd(n){n.h=1+Math.max(h(n.l),h(n.r))}
+function bal(n){return h(n.l)-h(n.r)}
+function rotR(y){let x=y.l;y.l=x.r;x.r=y;upd(y);upd(x);return x}
+function rotL(x){let y=x.r;x.r=y.l;y.l=x;upd(x);upd(y);return y}
+function insert(n,v){if(!n)return new Node(v);if(v<n.v)n.l=insert(n.l,v);else if(v>n.v)n.r=insert(n.r,v);else return n;upd(n);let b=bal(n);if(b>1&&v<n.l.v)return rotR(n);if(b<-1&&v>n.r.v)return rotL(n);if(b>1&&v>n.l.v){n.l=rotL(n.l);return rotR(n)}if(b<-1&&v<n.r.v){n.r=rotR(n.r);return rotL(n)}return n}
+function minN(n){while(n.l)n=n.l;return n}
+function del(n,v){if(!n)return null;if(v<n.v)n.l=del(n.l,v);else if(v>n.v)n.r=del(n.r,v);else{if(!n.l||!n.r)return n.l||n.r;else{let t=minN(n.r);n.v=t.v;n.r=del(n.r,t.v)}}upd(n);let b=bal(n);if(b>1&&bal(n.l)>=0)return rotR(n);if(b>1&&bal(n.l)<0){n.l=rotL(n.l);return rotR(n)}if(b<-1&&bal(n.r)<=0)return rotL(n);if(b<-1&&bal(n.r)>0){n.r=rotR(n.r);return rotL(n)}return n}
+function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);if(!root)return;drawNode(root,canvas.width/2,40,canvas.width/4)}
+function drawNode(n,x,y,dx){if(!n)return;if(n.l){ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-dx,y+60);ctx.strokeStyle="#38bdf8";ctx.stroke();drawNode(n.l,x-dx,y+60,dx/2)}if(n.r){ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+dx,y+60);ctx.strokeStyle="#38bdf8";ctx.stroke();drawNode(n.r,x+dx,y+60,dx/2)}ctx.beginPath();ctx.arc(x,y,20,0,Math.PI*2);ctx.fillStyle="#e2e8f0";ctx.fill();ctx.strokeStyle="#38bdf8";ctx.stroke();ctx.fillStyle="#000";ctx.textAlign="center";ctx.fillText(n.v,x,y)}
+function insertVal(){let v=parseInt(document.getElementById('val').value);if(isNaN(v))return;root=insert(root,v);document.getElementById('val').value='';draw()}
+function deleteVal(){let v=parseInt(document.getElementById('val').value);if(isNaN(v))return;root=del(root,v);document.getElementById('val').value='';draw()}
+function clearTree(){root=null;draw()}
+</script>
+</body>
+  </html>
