@@ -2,7 +2,7 @@
 
 An interactive web-based visualization tool for AVL Trees - a self-balancing Binary Search Tree.
 
-🔗 **Live Demo:** [Click here to view](https://your-username.github.io/Avl-Tree-Visualizer/)
+🔗 **Live Demo:** https://kalpanakotha3-art.github.io/Avl-tree-project-/
 
 ### ✨ Features
 - Insert nodes with automatic balancing
@@ -22,3 +22,5 @@ An interactive web-based visualization tool for AVL Trees - a self-balancing Bin
 
 ### 📂 File Structure
 - `index.html` - Main visualizer code
+
+Made with ❤️ for Data Structures learning
